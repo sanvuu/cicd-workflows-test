@@ -1,6 +1,10 @@
 name: Build And Push Image via Golang Application Hello World
   #env:
 
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build_artifact:
