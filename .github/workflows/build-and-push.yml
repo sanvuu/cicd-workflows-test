@@ -1,5 +1,8 @@
 name: Build And Push Image via Golang Application Hello World
-  #env:
+  env:
+    DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+    DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    IMAGE_TAG: ${{ github.sha }}
 
 on:
   push:
@@ -21,3 +24,32 @@ jobs:
 
       - name: Build Binary
         run: go build -o main .
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: artifact-golang
+          path: ./main
+
+  build_push_image:
+    needs: build_artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Download Artifact
+        uses: actions/download-artifact@master
+        with:
+          name: artifact-golang
+          path: ./main
+
+      - name: Docker Login
+        run: docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+
+      - name: Docker Build
+        run: docker build . -t ${DOCKER_USERNAME}/test:${IMAGE_TAG}
+
+      - name: docker push
+        run: docker push ${DOCKER_USERNAME}/test:${IMAGE_TAG} 
