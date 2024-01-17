@@ -1,8 +1,9 @@
 name: Build And Push Image via Golang Application Hello World
-  env:
-    DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-    DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    IMAGE_TAG: ${{ github.sha }}
+
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  IMAGE_TAG: ${{ github.sha }}
 
 on:
   push:
